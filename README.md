@@ -24,6 +24,6 @@ GAN can be used to generate image randomly or by class.
 
 
 
+---
 
-
-어느정도 완료되면 0번째 commit으로 초기화 할 것,
+### 어느정도 완료되면 0번째 commit으로 초기화 할 것,
