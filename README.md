@@ -1,5 +1,5 @@
-This is a toy project for implementation of image generating.
-I tested the Pokémon images as a topic.
+This is a toy project for implementation of image generating.  
+I tested the Pokémon images as a topic.  
 I wish this repo could be helpful for many people.
 
 # Preparing dataset
@@ -8,9 +8,10 @@ I wish this repo could be helpful for many people.
 
 # Train / Fine-tuning
 I tested 3 different methods.
-1. GAN
-2. Transfer learning on Stable Diffusion
-3. LORA
+1. **GAN**  
+2. **Transfer learning on Stable Diffusion**  
+3. **LORA**
+
 
 ## GAN
 GAN can be used to generate image randomly or by class. I trained the dataset on the [StyleGAN-ADA](https://github.com/NVlabs/stylegan2-ada-pytorch.git) model. You can inference by using my checkpoint file.
