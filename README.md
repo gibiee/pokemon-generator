@@ -1,6 +1,6 @@
-This is a toy project for implementation of image generating.  
-I tested the Pokémon images as a topic.  
-I wish this repo could be helpful for many people.
+This is a personal toy project for implementation of image generating.  
+I tested the Pokémon as a topic.  
+I wish this repo could be helpful for many people.  
 
 # Preparing dataset
 
@@ -38,6 +38,7 @@ https://github.com/justinpinkney/stable-diffusion
 ## LORA
 로라는 최신 유행하는 방법 중 하나입니다. 빠르고 효과적으로 Stable Diffusion을 파인튜닝할 수 있습니다.
 
+https://github.com/cloneofsimo/lora.git
 
 
 ---
