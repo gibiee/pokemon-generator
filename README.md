@@ -3,8 +3,8 @@ I tested the Pokémon as a topic.
 I wish this repo could be helpful for many people.  
 
 # Preparing dataset
-
-크롤링
+https://pokemonkorea.co.kr/pokedex 이 사이트를 2023-12-?? 에 크롤링
+총 이미지 ????장
 
 # Train / Fine-tuning
 I tested 3 different methods.
