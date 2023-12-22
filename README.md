@@ -3,15 +3,22 @@ I tested the Pokémon as a topic.
 I wish this repo could be helpful for many people.  
 
 # Preparing dataset
-https://pokemonkorea.co.kr/pokedex 이 사이트를 2023-12-?? 에 크롤링
-총 이미지 ????장
+https://pokemonkorea.co.kr/pokedex 이 사이트를 2023-12-22 에 크롤링  
+사이트 총 이미지 1229장  
+크롤링 총 이미지 1195장
+
+1229 - 1195 = 34
+
+- "거다이맥스" 폼은 일반적인 포켓몬 이미지와 특성이 다르다고 판단하여 제외 (총 ??장)
+- 흰색 배경의 RGB 이미지를 얻기 위하여 추가적인 처리
+
+(표) 크롤링 직후 이미지, 후처리 이후 
 
 # Train / Fine-tuning
 I tested 3 different methods.
 1. **GAN**  
 2. **Transfer learning on Stable Diffusion**  
 3. **LORA**
-
 
 ## GAN
 GAN can be used to generate image randomly or by class. I trained the dataset on the [StyleGAN-ADA](https://github.com/NVlabs/stylegan2-ada-pytorch.git) model. You can inference by using my checkpoint file.
