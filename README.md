@@ -1,6 +1,4 @@
-This is a personal toy project for implementation of image generation.  
-I choose the Pokémon as a topic.  
-I wish this repo could be helpful for many people.  
+# Currently in development 
 
 # Web Demo
 
