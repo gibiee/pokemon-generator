@@ -1,7 +1,7 @@
 # Currently in development 
 ## To do list
-[ ] https://zukan.pokemon.co.jp 해당 사이트에서 크롤링하도록 코드 수정
-[ ] colab이 아닌, 로컬 머신에서 train 코드 돌리기
+- [ ] https://zukan.pokemon.co.jp 해당 사이트에서 크롤링하도록 코드 수정
+- [ ] colab이 아닌, 로컬 머신에서 train 코드 돌리기
 
 # Web Demo
 
