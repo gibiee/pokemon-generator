@@ -45,6 +45,7 @@ for i, item in enumerate(items) :
 	alpha = img.split()[-1]
 	bg = Image.new('RGB', img.size, color=(255,255,255))
 	bg.paste(img, mask=alpha)
+	bg = bg.resize((512,512), Image.LANCZOS)
 
 	base = os.path.basename(img_src)
 	fn, ext = os.path.splitext(base)
