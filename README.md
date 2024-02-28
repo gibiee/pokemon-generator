@@ -15,7 +15,7 @@
 
 |Before|After|
 |:---:|:---:|
-|<img src="https://github.com/gibiee/pokemon-generator/assets/37574274/04b9914e-56e6-43b2-a5cb-61aff138fadd" width="50%" />|<img src="https://github.com/gibiee/pokemon-generator/assets/37574274/bfb17068-9ae3-4b08-8b69-731a1a6efd7f" width="50%" />|
+|![before](https://github.com/gibiee/pokemon-generator/assets/37574274/04b9914e-56e6-43b2-a5cb-61aff138fadd)|![after](https://github.com/gibiee/pokemon-generator/assets/37574274/bfb17068-9ae3-4b08-8b69-731a1a6efd7f)|
 
 - 사이트 전체 이미지 1252장
 - 크롤링 결과 이미지 1195장
