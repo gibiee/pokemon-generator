@@ -1,4 +1,7 @@
 # Currently in development 
+## To do list
+[ ] https://zukan.pokemon.co.jp 해당 사이트에서 크롤링하도록 코드 수정
+[ ] colab이 아닌, 로컬 머신에서 train 코드 돌리기
 
 # Web Demo
 
@@ -7,7 +10,7 @@
 2. Train
 3. Inference
 
-## Preparing dataset : `1_crawling.py`
+## Preparing dataset : `crawling.py`
 - https://pokemonkorea.co.kr/pokedex 이 사이트를 크롤링
 - 수집한 이미지를 512x512 해상도로 저장 (모델의 사이즈 규칙 때문에)
 - 크롤링 코드 상에서, "거다이맥스" 폼은 일반적인 포켓몬 이미지와 특성이 다르다고 판단하여 제외 (총 34장)
@@ -21,10 +24,18 @@
 - 크롤링 결과 이미지 1195장
 
 
-## Train : `2_train_in_colab.ipynb`
-I trained the dataset on the [StyleGAN-ADA](https://github.com/NVlabs/stylegan2-ada-pytorch.git) model in Colab.  
+## Train
+I trained the dataset on the [StyleGAN-ADA](https://github.com/NVlabs/stylegan2-ada-pytorch.git) model.
+
+### Installation
+```sh
+```
+
+### Run train
+```sh
+```
 
 
-## Inference
+## Inference : `demo.py`
 You can generate a image randomly or by class in [web demo](#web-demo).
 

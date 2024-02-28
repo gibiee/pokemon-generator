@@ -65,8 +65,3 @@ for i, item in enumerate(items) :
 
 df.to_csv('dataset/info.csv')
 print(f"total : {len(df)}")
-
-
-# img = Image.open(requests.get('https://data1.pokemonkorea.co.kr/newdata/pokedex/full/000201.png', stream=True, timeout=5).raw)
-# img.convert('RGB')
-# img.convert('RGB').save('problem.png')
