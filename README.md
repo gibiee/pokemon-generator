@@ -1,7 +1,4 @@
 # Currently in development 
-## To do list
-- [ ] https://zukan.pokemon.co.jp 해당 사이트에서 크롤링하도록 코드 수정
-- [ ] colab이 아닌, 로컬 머신에서 train 코드 돌리기
 
 # Web Demo
 
@@ -29,10 +26,27 @@ I trained the dataset on the [StyleGAN-ADA](https://github.com/NVlabs/stylegan2-
 
 ### Installation
 ```sh
+conda create -n pokemon python=3.8
+conda activate pokemon
+
+
 ```
 
 ### Run train
+1. `augpipe_specs = {}` 코드에 아래 설정을 추가
+`'custom': dict(xflip=1, rotate90=1, scale=1, rotate=1, aniso=1, xfrac=1, brightness=1, contrast=1, lumaflip=1, hue=1, saturation=1, imgfilter=1, noise=1, cutout=1)`
+
+2. Run command
 ```sh
+python stylegan2-ada-pytorch/train.py \
+    --data=dataset/images \
+    --mirror=true \
+    --augpipe=blit \
+    --outdir=./training-runs \
+    --snap=100 \
+    --gpus=1 \
+    --batch 4 \
+    --dry-run
 ```
 
 
