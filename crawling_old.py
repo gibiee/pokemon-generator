@@ -5,28 +5,13 @@ import pandas as pd
 from PIL import Image
 import os, requests
 
-class_kor = ["노말", "불꽃", "물", "풀", "전기", "얼음", "격투", "독", "땅", "비행", "에스퍼", "벌레", "바위", "고스트", "드래곤", "악", "강철", "페어리"]
-class_en = ["Normal", "Fire", "Water", "Grass", "Electric", "Ice", "Fighting", "Poison", "Ground", "Flying", "Psychic", "Bug", "Rock", "Ghost", "Dragon", "Dark", "Steel", "Fairy"]
-df = pd.DataFrame(columns=['img_path'] + class_en)
+url = "https://pokemonkorea.co.kr/pokedex"
+class_list = ["노말", "불꽃", "물", "풀", "전기", "얼음", "격투", "독", "땅", "비행", "에스퍼", "벌레", "바위", "고스트", "드래곤", "악", "강철", "페어리"]
 
-url = "https://www.pokemon.com/us/pokedex"
+df = pd.DataFrame(columns=['img_path'] + class_list)
+
 browser = webdriver.Chrome()
 browser.get(url)
-
-items_count = None
-while True :
-    load_btn = browser.find_element(By.ID, "loadMore")
-    load_btn.click()
-    items = browser.find_elements(By.CLASS_NAME, "animating")
-    len(items)
-    if items_count == None : items_count = len(items)
-    elif items_count == len(items) : break
-
-
-
-
-
-
 
 prev_height = browser.execute_script("return document.body.scrollHeight")
 while True:
