@@ -1,82 +1,60 @@
-from selenium import webdriver
+import undetected_chromedriver as uc
 from selenium.webdriver.common.by import By
 import time
 import pandas as pd
 from PIL import Image
 import os, requests
 
+url = "https://www.pokemon.com/us/pokedex"
+options = uc.ChromeOptions()
+options.add_argument("--headless=new")
+browser = uc.Chrome(options=options)
+browser.get(url)
+browser.implicitly_wait(10)
+
+while True :
+    try :
+        load_btn = browser.find_element(By.ID, "loadMore")
+        load_btn.click()
+        time.sleep(1)
+        items = browser.find_element(By.CLASS_NAME, 'results').find_elements(By.CLASS_NAME, "animating")
+    except :
+        break
+print('Total items :', len(items))
+
 class_kor = ["노말", "불꽃", "물", "풀", "전기", "얼음", "격투", "독", "땅", "비행", "에스퍼", "벌레", "바위", "고스트", "드래곤", "악", "강철", "페어리"]
 class_en = ["Normal", "Fire", "Water", "Grass", "Electric", "Ice", "Fighting", "Poison", "Ground", "Flying", "Psychic", "Bug", "Rock", "Ghost", "Dragon", "Dark", "Steel", "Fairy"]
 df = pd.DataFrame(columns=['img_path'] + class_en)
-
-url = "https://www.pokemon.com/us/pokedex"
-browser = webdriver.Chrome()
-browser.get(url)
-
-items_count = None
-while True :
-    load_btn = browser.find_element(By.ID, "loadMore")
-    load_btn.click()
-    items = browser.find_elements(By.CLASS_NAME, "animating")
-    len(items)
-    if items_count == None : items_count = len(items)
-    elif items_count == len(items) : break
-
-
-
-
-
-
-
-prev_height = browser.execute_script("return document.body.scrollHeight")
-while True:
-	browser.execute_script("window.scrollTo(0,document.body.scrollHeight)")
-	time.sleep(0.5)
-	current_height = browser.execute_script("return document.body.scrollHeight")
-	if current_height == prev_height: break
-	prev_height = current_height
-
-items = browser.find_elements(By.CLASS_NAME, "col-lg-2.col-6")
-print(f"count : {len(items)}")
-
 os.makedirs('dataset/images', exist_ok=True)
 for i, item in enumerate(items) :
-	if i % (len(items) // 10) == 0 : print(f"{i} / {len(items)}")
+    if i % (len(items) // 10) == 0 : print(f"{i} / {len(items)}")
 
-	description = item.find_elements(By.TAG_NAME, 'p')[-1].text
-	if '거다이맥스' in description : continue
+    num = item.find_element(By.CLASS_NAME, 'id').text.replace('#', '')
+    abilities = [a.text for a in item.find_elements(By.CLASS_NAME, 'abilities')]
+    img_src = item.find_element(By.TAG_NAME, 'img').get_attribute('src')
+    img_src = img_src.replace('detail', 'full')
 
-	img_src = item.find_element(By.TAG_NAME, 'img').get_attribute('src')
-	img_src = img_src.replace('mid', 'full')
+    while True : 
+        try :
+            img = Image.open(requests.get(img_src, stream=True, timeout=5).raw)
+            break
+        except :
+            print(img_src)
+            time.sleep(1)
 
-	while True : 
-		try :
-			img = Image.open(requests.get(img_src, stream=True, timeout=5).raw)
-			break
-		except :
-			print(img_src)
-			time.sleep(1)
+    alpha = img.split()[-1]
+    bg = Image.new('RGB', img.size, color=(255,255,255))
+    bg.paste(img, mask=alpha)
+    bg = bg.resize((512,512), Image.LANCZOS)
+    bg.save(f'dataset/images/{num}.png')
 
-	alpha = img.split()[-1]
-	bg = Image.new('RGB', img.size, color=(255,255,255))
-	bg.paste(img, mask=alpha)
-	bg = bg.resize((512,512), Image.LANCZOS)
+    feature_vector = [0] * len(class_en)
+    for ability in abilities :
+        idx = class_en.index(ability)
+        feature_vector[idx] = 1
 
-	base = os.path.basename(img_src)
-	fn, ext = os.path.splitext(base)
-	bg.save(f"dataset/images/{fn}.png")
-
-	feature_vector = [0] * len(class_list)
-	features = item.find_elements(By.TAG_NAME, 'span')
-	for feature in features :
-		feature_name = feature.text
-		idx = class_list.index(feature_name)
-		feature_vector[idx] = 1
-
-	item_info = [f"{fn}.png"] + feature_vector
-	item_info
-
-	df.loc[len(df)] = item_info
+    item_info = [f"{num}.png"] + feature_vector
+    df.loc[len(df)] = item_info
 
 df.to_csv('dataset/info.csv')
 print(f"total : {len(df)}")

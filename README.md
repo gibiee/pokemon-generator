@@ -22,21 +22,13 @@ conda activate pokemon
 
 conda install pytorch==1.12.1 torchvision==0.13.1 torchaudio==0.12.1 cudatoolkit=11.3 -c pytorch
 conda install ipykernel
-pip install selenium pandas
+pip install selenium undetected-chromedriver pandas
 ```
 
 ## Preparing dataset : `crawling.py`
 - https://www.pokemon.com/us/pokedex 이 사이트를 크롤링
 - 수집한 이미지를 512x512 해상도로 저장 (StyleGan2 모델의 사이즈 규칙 때문에)
-- ~~크롤링 코드 상에서, "거다이맥스" 폼은 일반적인 포켓몬 이미지와 특성이 다르다고 판단하여 제외 (총 34장)~~
-- 흰색 배경의 깔끔한 RGB 이미지를 얻기 위하여 추가적인 처리
-
-|Before|After|
-|:---:|:---:|
-|![before](https://github.com/gibiee/pokemon-generator/assets/37574274/04b9914e-56e6-43b2-a5cb-61aff138fadd)|![after](https://github.com/gibiee/pokemon-generator/assets/37574274/bfb17068-9ae3-4b08-8b69-731a1a6efd7f)|
-
-- 사이트 전체 이미지 1252장
-- 크롤링 결과 이미지 1195장
+- 이미지 총 1026장
 
 
 ## Train
