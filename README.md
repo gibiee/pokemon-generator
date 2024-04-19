@@ -18,18 +18,25 @@ conda activate pokemon
 
 conda install ipykernel
 pip install numpy==1.22.4
-# pip install psutil
-pip install selenium undetected-chromedriver requests pandas
+pip install selenium undetected-chromedriver requests pandas psutil
 ```
 
-## Preapare dataset
-- Crawling pokemon images : `crawling.py`
+## Preapare dataset 
+
+### Crawling pokemon images : `crawling.py`
 - 총 1025장의 이미지를 크롤링 : https://www.pokemon.com/us/pokedex
 - 수집한 이미지를 512x512 해상도로 저장 (StyleGan2 모델의 사이즈 규칙 때문에)
 - zip 파일으로 만드는 과정 필요
 
+### Make json file for model training : `make_json.py`
+- `crawling.py`에서 저장한 `info.csv` 파일을 참고하여 `.json` 파일 제작
+- 그 후 모델 학습에 적합한 `.zip` 파일으로 만드는 과정 필요
+
 ```sh
-# zip 파일로 만드는 과정 필요
+# In "stylegan3" folder
+python dataset_tool.py \
+    --source ../dataset/images \
+    --dest ../dataset/dataset.zip
 ```
 
 ## Model training

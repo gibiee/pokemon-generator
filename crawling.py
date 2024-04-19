@@ -57,4 +57,4 @@ for i, item in enumerate(items) :
     df.loc[len(df)] = item_info
 
 df.to_csv('dataset/info.csv')
-print(f"total : {len(df)}")
+print(f"CSV saved...! row : {len(df)}")
