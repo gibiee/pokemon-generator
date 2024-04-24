@@ -34,7 +34,7 @@ for i, item in enumerate(items) :
     img_src = item.find_element(By.TAG_NAME, 'img').get_attribute('src')
     img_src = img_src.replace('detail', 'full')
 
-    while True : 
+    while True :
         try :
             img = Image.open(requests.get(img_src, stream=True, timeout=5).raw)
             break
