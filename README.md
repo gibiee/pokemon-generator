@@ -50,13 +50,44 @@ CUDA_VISIBLE_DEVICES=0 python stylegan3/train.py \
     --mirror=1 \
     --cond=1 \
     --gamma=8 \
-    --kimg=50000 \
-    --tick=100 \
-    --snap=50
+    --kimg=25000 \
+    --tick=4 \
+    --snap=10
 
 # --kimg KIMG : Total training duration  [default: 25000]
 # --tick KIMG : How often to print progress  [default: 4]
 # --snap TICKS : How often to save snapshots  [default: 50]
+```
+
+```sh
+CUDA_VISIBLE_DEVICES=0 python stylegan3/train.py \
+    --resume=./stylegan3/training-runs/00000-stylegan3-r-dataset-gpus1-batch4-gamma8/network-snapshot-001200.pkl \
+    --gpus=1 \
+    --cfg=stylegan3-r \
+    --data=./dataset/dataset.zip \
+    --outdir=./stylegan3/training-runs \
+    --batch=4 \
+    --mirror=1 \
+    --cond=1 \
+    --gamma=8 \
+    --kimg=25000 \
+    --tick=10 \
+    --snap=10
+```
+
+- Conditional 학습이 잘 안되어서 전체 데이터로 학습
+```sh
+CUDA_VISIBLE_DEVICES=0 python stylegan3/train.py \
+    --gpus=1 \
+    --cfg=stylegan3-r \
+    --data=./dataset/dataset.zip \
+    --outdir=./stylegan3/training-runs \
+    --batch=4 \
+    --mirror=1 \
+    --gamma=8 \
+    --kimg=25000 \
+    --tick=10 \
+    --snap=10
 ```
 
 ## Inference : `demo.py`
