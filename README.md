@@ -87,8 +87,19 @@ CUDA_VISIBLE_DEVICES=0 python stylegan3/train.py \
     --gamma=8 \
     --kimg=25000 \
     --tick=10 \
-    --snap=10
+    --snap=10 \
+    --aug=ada \
+    --dry-run
 ```
+
+- `train.py` 256 line
+- `c.augment_kwargs = dnnlib.EasyDict(class_name='training.augment.AugmentPipe', xflip=1, rotate90=0, xint=1, xint_max=0.1, scale=0.5, rotate=0.3, aniso=1, xfrac=0.2, brightness=0.3, contrast=0.2, lumaflip=0, hue=0, saturation=0.2)`
+
+- `python stylegan3/train.py --dry-run`
+rotate90 적용되면 안되는데...
+--aug ada 파라미터가 빠졌다.
+그리고 aug=1 이거 소수점 적용 안되는지?
+- [Augmentation](https://medium.com/@Dok11/how-to-check-augmentations-for-the-stylegan3-196f8c2ddf07) 체크
 
 ## Inference : `demo.py`
 You can generate a image randomly or by class in [web demo](#web-demo).
