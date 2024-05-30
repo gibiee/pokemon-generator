@@ -77,7 +77,7 @@ CUDA_VISIBLE_DEVICES=0 python stylegan3/train.py \
     --snap=10
 ```
 
-- 00002 : conditional 학습이 잘 안되어서 전체 데이터로 학습
+- 00002 : conditional 학습이 잘 안되어서 non-conditional 학습
 ```sh
 CUDA_VISIBLE_DEVICES=0 python stylegan3/train.py \
     --gpus=1 \
@@ -94,11 +94,27 @@ CUDA_VISIBLE_DEVICES=0 python stylegan3/train.py \
     --dry-run
 ```
 
-- 00003 : augment_kwargs 수정 후 전체 데이터 학습
+- 00003 : augment_kwargs 수정 후 non-conditional 학습
   - https://medium.com/@Dok11/how-to-check-augmentations-for-the-stylegan3-196f8c2ddf07 참고
   - `train.py` 256 line : `c.augment_kwargs = dnnlib.EasyDict(class_name='training.augment.AugmentPipe', xflip=1, rotate90=0, xint=1, xint_max=0.1, scale=0.5, rotate=0.3, aniso=1, xfrac=0.2, brightness=0.3, contrast=0.2, lumaflip=0, hue=0, saturation=0.2)`
 
-- 00004(예정) : 위 augment_kwargs 적용하면서 conditional 학습은 잘 이루어지는지 확인 필요
+- 00004 : 위 augment_kwargs 적용하면서 conditional 학습
+```sh
+CUDA_VISIBLE_DEVICES=0 python stylegan3/train.py \
+    --gpus=1 \
+    --cfg=stylegan3-r \
+    --data=./dataset/dataset.zip \
+    --cond=1 \
+    --outdir=./stylegan3/training-runs \
+    --batch=4 \
+    --mirror=1 \
+    --gamma=8 \
+    --kimg=25000 \
+    --tick=10 \
+    --snap=10 \
+    --aug=ada \
+    --dry-run
+```
 
 
 
