@@ -98,7 +98,7 @@ CUDA_VISIBLE_DEVICES=0 python stylegan3/train.py \
   - https://medium.com/@Dok11/how-to-check-augmentations-for-the-stylegan3-196f8c2ddf07 참고
   - `train.py` 256 line : `c.augment_kwargs = dnnlib.EasyDict(class_name='training.augment.AugmentPipe', xflip=1, rotate90=0, xint=1, xint_max=0.1, scale=0.5, rotate=0.3, aniso=1, xfrac=0.2, brightness=0.3, contrast=0.2, lumaflip=0, hue=0, saturation=0.2)`
 
-- 00004 : 위 augment_kwargs 적용하면서 conditional 학습
+- 00004 : 위 00003 버전의 augment_kwargs 적용하면서 conditional 학습
 ```sh
 CUDA_VISIBLE_DEVICES=0 python stylegan3/train.py \
     --gpus=1 \
@@ -115,6 +115,26 @@ CUDA_VISIBLE_DEVICES=0 python stylegan3/train.py \
     --aug=ada \
     --dry-run
 ```
+
+- 00005 : 위 00004 버전의 중간결과가 좋지 않으므로, 00003 버전의 학습을 resume
+```sh
+CUDA_VISIBLE_DEVICES=0 python stylegan3/train.py \
+    --resume=./stylegan3/training-runs/00003-stylegan3-r-dataset-gpus1-batch4-gamma8/network-snapshot-003800.pkl \
+    --gpus=1 \
+    --cfg=stylegan3-r \
+    --data=./dataset/dataset.zip \
+    --outdir=./stylegan3/training-runs \
+    --batch=4 \
+    --mirror=1 \
+    --gamma=8 \
+    --kimg=25000 \
+    --tick=10 \
+    --snap=10 \
+    --aug=ada \
+    --dry-run
+```
+
+
 
 
 
