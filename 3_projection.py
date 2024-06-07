@@ -1,11 +1,14 @@
 # https://github.com/NVlabs/stylegan2-ada-pytorch.git
 # projector.py
 
-import copy
+import sys
+sys.path.append('./stylegan3')
+
 import os
+import copy
+import glob
 from time import perf_counter
 
-import click
 import imageio
 import numpy as np
 import PIL.Image
@@ -14,9 +17,6 @@ import torch.nn.functional as F
 
 import dnnlib
 import legacy
-
-network_path = "./stylegan3/training-runs/00003-stylegan3-r-dataset-gpus1-batch4-gamma8/network-snapshot-003500.pkl"
-
 
 def project(
     G,
@@ -128,40 +128,29 @@ def project(
 
 #----------------------------------------------------------------------------
 
-@click.command()
-@click.option('--network', 'network_pkl', help='Network pickle filename', required=True)
-@click.option('--target', 'target_fname', help='Target image file to project to', required=True, metavar='FILE')
-@click.option('--num-steps',              help='Number of optimization steps', type=int, default=1000, show_default=True)
-@click.option('--seed',                   help='Random seed', type=int, default=303, show_default=True)
-@click.option('--save-video',             help='Save an mp4 video of optimization progress', type=bool, default=True, show_default=True)
-@click.option('--outdir',                 help='Where to save the output images', required=True, metavar='DIR')
-def run_projection(
-    network_pkl: str,
-    target_fname: str,
-    outdir: str,
-    save_video: bool,
-    seed: int,
-    num_steps: int
-):
-    """Project given image to the latent space of pretrained network pickle.
-
-    Examples:
-
-    \b
-    python projector.py --outdir=out --target=~/mytargetimg.png \\
-        --network=https://nvlabs-fi-cdn.nvidia.com/stylegan2-ada-pytorch/pretrained/ffhq.pkl
-    """
+if __name__ == "__main__" :
+    device = torch.device('cuda')
+    network_path = "./stylegan3/training-runs/00003-stylegan3-r-dataset-gpus1-batch4-gamma8/network-snapshot-003500.pkl"
+    img_paths = sorted(glob.glob("dataset/images/*.png"))[:2]
+    outdir = "projections"
+    num_steps = 1000
+    seed = 0
+    
     np.random.seed(seed)
     torch.manual_seed(seed)
-
-    # Load networks.
-    print('Loading networks from "%s"...' % network_pkl)
-    device = torch.device('cuda')
-    with dnnlib.util.open_url(network_pkl) as fp:
+    os.makedirs(outdir, exist_ok=True)
+    with dnnlib.util.open_url(network_path) as fp:
         G = legacy.load_network_pkl(fp)['G_ema'].requires_grad_(False).to(device) # type: ignore
 
-    # Load target image.
-    target_pil = PIL.Image.open(target_fname).convert('RGB')
+    img_path = img_paths[0]
+    fn = os.path.basename(img_path)
+    video_savePath = f"{outdir}/{fn}_proj.mp4"
+    target_pil_savePath = f"{outdir}/{fn}_target.jpg"
+    proj_savePath = f'{outdir}/{fn}_proj.jpg'
+    npz_savePath = f'{outdir}/{fn}_projected_w.npz'
+    print(img_path, fn)
+
+    target_pil = PIL.Image.open(img_path).convert('RGB')
     w, h = target_pil.size
     s = min(w, h)
     target_pil = target_pil.crop(((w - s) // 2, (h - s) // 2, (w + s) // 2, (h + s) // 2))
@@ -179,30 +168,23 @@ def run_projection(
     )
     print (f'Elapsed: {(perf_counter()-start_time):.1f} s')
 
-    # Render debug output: optional video and projected image and W vector.
-    os.makedirs(outdir, exist_ok=True)
-    if save_video:
-        video = imageio.get_writer(f'{outdir}/proj.mp4', mode='I', fps=10, codec='libx264', bitrate='16M')
-        print (f'Saving optimization progress video "{outdir}/proj.mp4"')
-        for projected_w in projected_w_steps:
-            synth_image = G.synthesis(projected_w.unsqueeze(0), noise_mode='const')
-            synth_image = (synth_image + 1) * (255/2)
-            synth_image = synth_image.permute(0, 2, 3, 1).clamp(0, 255).to(torch.uint8)[0].cpu().numpy()
-            video.append_data(np.concatenate([target_uint8, synth_image], axis=1))
-        video.close()
+    # save video
+    video = imageio.get_writer(video_savePath, mode='I', fps=10, codec='libx264', bitrate='16M')
+    print("Video saving... ", end='')
+    for projected_w in projected_w_steps:
+        synth_image = G.synthesis(projected_w.unsqueeze(0), noise_mode='const')
+        synth_image = (synth_image + 1) * (255/2)
+        synth_image = synth_image.permute(0, 2, 3, 1).clamp(0, 255).to(torch.uint8)[0].cpu().numpy()
+        video.append_data(np.concatenate([target_uint8, synth_image], axis=1))
+    video.close()
+    print('Done!')
 
-    # Save final projected frame and W vector.
-    target_pil.save(f'{outdir}/target.png')
+    print("Latent saving...", end='')
+    target_pil.save(target_pil_savePath)
     projected_w = projected_w_steps[-1]
     synth_image = G.synthesis(projected_w.unsqueeze(0), noise_mode='const')
     synth_image = (synth_image + 1) * (255/2)
     synth_image = synth_image.permute(0, 2, 3, 1).clamp(0, 255).to(torch.uint8)[0].cpu().numpy()
-    PIL.Image.fromarray(synth_image, 'RGB').save(f'{outdir}/proj.png')
-    np.savez(f'{outdir}/projected_w.npz', w=projected_w.unsqueeze(0).cpu().numpy())
-
-#----------------------------------------------------------------------------
-
-if __name__ == "__main__":
-    run_projection() # pylint: disable=no-value-for-parameter
-
-#----------------------------------------------------------------------------
+    PIL.Image.fromarray(synth_image, 'RGB').save(proj_savePath)
+    np.savez(npz_savePath, w=projected_w.unsqueeze(0).cpu().numpy())
+    print('Done!')
