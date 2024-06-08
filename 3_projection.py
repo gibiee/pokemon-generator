@@ -1,5 +1,7 @@
 # https://github.com/NVlabs/stylegan2-ada-pytorch.git
 # projector.py
+# 참고 : https://github.com/NVlabs/stylegan3/issues/54
+# 여기의 projector와 성능 비교 : https://github.com/PDillis/stylegan3-fun
 
 import sys
 sys.path.append('./stylegan3')
@@ -131,7 +133,7 @@ def project(
 if __name__ == "__main__" :
     device = torch.device('cuda')
     network_path = "./stylegan3/training-runs/00003-stylegan3-r-dataset-gpus1-batch4-gamma8/network-snapshot-003500.pkl"
-    img_paths = sorted(glob.glob("dataset/images/*.png"))[:2]
+    img_path = "./dataset/images/0007.png"
     outdir = "projections"
     num_steps = 1000
     seed = 0
@@ -142,7 +144,6 @@ if __name__ == "__main__" :
     with dnnlib.util.open_url(network_path) as fp:
         G = legacy.load_network_pkl(fp)['G_ema'].requires_grad_(False).to(device) # type: ignore
 
-    img_path = img_paths[0]
     fn = os.path.basename(img_path)
     video_savePath = f"{outdir}/{fn}_proj.mp4"
     target_pil_savePath = f"{outdir}/{fn}_target.jpg"

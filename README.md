@@ -1,4 +1,6 @@
 # 현재 개발 중 입니다.
+- stylegan3-fun/projector.py 코드를 리펙토링하기 -> dataset 이미지에 대해서 class 폴더로 분류하기
+- 훈련 중간결과 정리해서 비교하고 best weight 선별
 
 ## Process
 1. Environment setup
@@ -8,18 +10,23 @@
 
 ## Environment setup
 ```sh
-git clone https://github.com/gibiee/pokemon-generator.git
-git clone https://github.com/NVlabs/stylegan3.git
+conda create -n test python=3.9
+conda activate test
 
-cd stylegan3
-
-conda env create -f environment.yml -n pokemon
-conda activate pokemon
-
+conda install pytorch==1.11.0 torchvision==0.12.0 torchaudio==0.11.0 cudatoolkit=11.3 -c pytorch
 conda install ipykernel
-pip install numpy==1.22.4
-pip install selenium undetected-chromedriver requests pandas psutil
+
+pip install click tqdm scipy
+pip install imageio[ffmpeg] imageio[pyav]
+
+pip install selenium undetected-chromedriver
 ```
+
+### Code
+- git clone https://github.com/gibiee/pokemon-generator.git
+- git clone https://github.com/NVlabs/stylegan3.git
+- git clone https://github.com/PDillis/stylegan3-fun
+
 
 ## Preapare dataset 
 
@@ -135,7 +142,19 @@ CUDA_VISIBLE_DEVICES=0 python stylegan3/train.py \
 ```
 
 
+## Projection
+```sh
+cd stylegan3-fun
 
+CUDA_VISIBLE_DEVICES=1 \
+python projector.py \
+  --network=../stylegan3/training-runs/00003-stylegan3-r-dataset-gpus1-batch4-gamma8/network-snapshot-003500.pkl \
+  --cfg=stylegan3-r \
+  --target=../dataset/images/0007.png \
+  --save-video \
+  --outdir=../projections-fun \
+  --compress
+```
 
 
 ## Inference : `demo.py`
