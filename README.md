@@ -23,9 +23,13 @@ pip install selenium undetected-chromedriver
 ```
 
 ### Code
-- git clone https://github.com/gibiee/pokemon-generator.git
-- git clone https://github.com/NVlabs/stylegan3.git
-- git clone https://github.com/PDillis/stylegan3-fun
+```sh
+git clone https://github.com/gibiee/pokemon-generator.git
+cd pokemon-generator
+
+git clone https://github.com/NVlabs/stylegan3.git
+git clone https://github.com/PDillis/stylegan3-fun
+```
 
 
 ## Preapare dataset 
@@ -144,18 +148,10 @@ CUDA_VISIBLE_DEVICES=0 python stylegan3/train.py \
 
 ## Projection
 ```sh
-cd stylegan3-fun
+CUDA_VISIBLE_DEVICES=1 python 3_projection_fun.py
 
-CUDA_VISIBLE_DEVICES=1 \
-python projector.py \
-  --network=../stylegan3/training-runs/00003-stylegan3-r-dataset-gpus1-batch4-gamma8/network-snapshot-003500.pkl \
-  --cfg=stylegan3-r \
-  --target=../dataset/images/0007.png \
-  --save-video \
-  --outdir=../projections-fun \
-  --compress
+CUDA_VISIBLE_DEVICES=1 python 3_projection.py
 ```
-
 
 ## Inference : `demo.py`
 You can generate a image randomly or by class in [web demo](#web-demo).

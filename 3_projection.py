@@ -132,11 +132,11 @@ def project(
 
 if __name__ == "__main__" :
     device = torch.device('cuda')
-    network_path = "./stylegan3/training-runs/00003-stylegan3-r-dataset-gpus1-batch4-gamma8/network-snapshot-003500.pkl"
+    network_path = "./stylegan3/training-runs/00005-stylegan3-r-dataset-gpus1-batch4-gamma8/network-snapshot-005000.pkl"
     img_path = "./dataset/images/0007.png"
     outdir = "projections"
     num_steps = 1000
-    seed = 0
+    seed = 12345
     
     np.random.seed(seed)
     torch.manual_seed(seed)
