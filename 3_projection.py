@@ -132,9 +132,9 @@ def project(
 
 if __name__ == "__main__" :
     device = torch.device('cuda')
-    network_path = "./stylegan3/training-runs/00005-stylegan3-r-dataset-gpus1-batch4-gamma8/network-snapshot-005000.pkl"
-    img_path = "./dataset/images/0007.png"
-    outdir = "projections"
+    network_path = "./stylegan3/training-runs/selection_train2/network-snapshot-009600.pkl"
+    img_paths = sorted(glob.glob('./dataset/images/*.png'))[:10]
+    outdir = "projections/projection"
     num_steps = 1000
     seed = 12345
     
@@ -144,48 +144,50 @@ if __name__ == "__main__" :
     with dnnlib.util.open_url(network_path) as fp:
         G = legacy.load_network_pkl(fp)['G_ema'].requires_grad_(False).to(device) # type: ignore
 
-    fn = os.path.basename(img_path)
-    video_savePath = f"{outdir}/{fn}_proj.mp4"
-    target_pil_savePath = f"{outdir}/{fn}_target.jpg"
-    proj_savePath = f'{outdir}/{fn}_proj.jpg'
-    npz_savePath = f'{outdir}/{fn}_projected_w.npz'
-    print(img_path, fn)
+    # 반복문 추가할 것!
+    for img_path in img_paths :
+        fn = os.path.basename(img_path)
+        video_savePath = f"{outdir}/{fn}_proj.mp4"
+        target_pil_savePath = f"{outdir}/{fn}_target.jpg"
+        proj_savePath = f'{outdir}/{fn}_proj.jpg'
+        npz_savePath = f'{outdir}/{fn}_projected_w.npz'
+        print(img_path, fn)
 
-    target_pil = PIL.Image.open(img_path).convert('RGB')
-    w, h = target_pil.size
-    s = min(w, h)
-    target_pil = target_pil.crop(((w - s) // 2, (h - s) // 2, (w + s) // 2, (h + s) // 2))
-    target_pil = target_pil.resize((G.img_resolution, G.img_resolution), PIL.Image.LANCZOS)
-    target_uint8 = np.array(target_pil, dtype=np.uint8)
+        target_pil = PIL.Image.open(img_path).convert('RGB')
+        w, h = target_pil.size
+        s = min(w, h)
+        target_pil = target_pil.crop(((w - s) // 2, (h - s) // 2, (w + s) // 2, (h + s) // 2))
+        target_pil = target_pil.resize((G.img_resolution, G.img_resolution), PIL.Image.LANCZOS)
+        target_uint8 = np.array(target_pil, dtype=np.uint8)
 
-    # Optimize projection.
-    start_time = perf_counter()
-    projected_w_steps = project(
-        G,
-        target=torch.tensor(target_uint8.transpose([2, 0, 1]), device=device), # pylint: disable=not-callable
-        num_steps=num_steps,
-        device=device,
-        verbose=True
-    )
-    print (f'Elapsed: {(perf_counter()-start_time):.1f} s')
+        # Optimize projection.
+        start_time = perf_counter()
+        projected_w_steps = project(
+            G,
+            target=torch.tensor(target_uint8.transpose([2, 0, 1]), device=device), # pylint: disable=not-callable
+            num_steps=num_steps,
+            device=device,
+            verbose=True
+        )
+        print (f'Elapsed: {(perf_counter()-start_time):.1f} s')
 
-    # save video
-    video = imageio.get_writer(video_savePath, mode='I', fps=10, codec='libx264', bitrate='16M')
-    print("Video saving... ", end='')
-    for projected_w in projected_w_steps:
+        # save video
+        video = imageio.get_writer(video_savePath, mode='I', fps=10, codec='libx264', bitrate='16M')
+        print("Video saving... ", end='')
+        for projected_w in projected_w_steps:
+            synth_image = G.synthesis(projected_w.unsqueeze(0), noise_mode='const')
+            synth_image = (synth_image + 1) * (255/2)
+            synth_image = synth_image.permute(0, 2, 3, 1).clamp(0, 255).to(torch.uint8)[0].cpu().numpy()
+            video.append_data(np.concatenate([target_uint8, synth_image], axis=1))
+        video.close()
+        print('Done!')
+
+        print("Latent saving...", end='')
+        target_pil.save(target_pil_savePath)
+        projected_w = projected_w_steps[-1]
         synth_image = G.synthesis(projected_w.unsqueeze(0), noise_mode='const')
         synth_image = (synth_image + 1) * (255/2)
         synth_image = synth_image.permute(0, 2, 3, 1).clamp(0, 255).to(torch.uint8)[0].cpu().numpy()
-        video.append_data(np.concatenate([target_uint8, synth_image], axis=1))
-    video.close()
-    print('Done!')
-
-    print("Latent saving...", end='')
-    target_pil.save(target_pil_savePath)
-    projected_w = projected_w_steps[-1]
-    synth_image = G.synthesis(projected_w.unsqueeze(0), noise_mode='const')
-    synth_image = (synth_image + 1) * (255/2)
-    synth_image = synth_image.permute(0, 2, 3, 1).clamp(0, 255).to(torch.uint8)[0].cpu().numpy()
-    PIL.Image.fromarray(synth_image, 'RGB').save(proj_savePath)
-    np.savez(npz_savePath, w=projected_w.unsqueeze(0).cpu().numpy())
-    print('Done!')
+        PIL.Image.fromarray(synth_image, 'RGB').save(proj_savePath)
+        np.savez(npz_savePath, w=projected_w.unsqueeze(0).cpu().numpy())
+        print(f'{fn} Done!')
