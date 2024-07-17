@@ -1,105 +1,40 @@
-# 현재 개발 중 입니다.
-- projection 결과 비교
+# 현재 개발 진행 중 입니다...
 
-## Process
-1. Environment setup
-2. Preapare dataset
-3. Model training
-4. Inference (Web Demo)
+# Index
+- Demo
+- Development
+  - Environment setup
+  - Preparing dataset
+  - Projections by StyleGAN-XL
+
+
+# Demo
+
+
+
+# Development
 
 ## Environment setup
 ```sh
-conda create -n test python=3.9
-conda activate test
+conda env create -f environment.yml
 
-conda install pytorch==1.11.0 torchvision==0.12.0 torchaudio==0.11.0 cudatoolkit=11.3 -c pytorch
-conda install ipykernel
-
-pip install click tqdm scipy
-pip install imageio[ffmpeg] imageio[pyav]
-
-pip install selenium undetected-chromedriver
+conda install pandas
+pip install selenium undetected-chromedriver webdriver_manager
+# brew install chromedriver
 ```
 
-### Code
-```sh
-git clone https://github.com/gibiee/pokemon-generator.git
-cd pokemon-generator
+## Preparing dataset
 
-git clone https://github.com/NVlabs/stylegan3.git
-git clone https://github.com/PDillis/stylegan3-fun
-```
-
-
-## Preapare dataset 
-
-### Crawling pokemon images : `1_crawling.py`
+### Crawling pokemon images : `crawling_images.py`
+- GUI 환경에서 실행하기를 권장
 - 총 1025장의 이미지를 크롤링 : https://www.pokemon.com/us/pokedex
-- 수집한 이미지를 512x512 해상도로 저장 (StyleGan2 모델의 사이즈 규칙 때문에)
-- zip 파일으로 만드는 과정 필요
-
-### Make json file for model training : `2_make_json.py`
-- `crawling.py`에서 저장한 `info.csv` 파일을 참고하여 `.json` 파일 제작
-- 그 후 모델 학습에 적합한 `.zip` 파일으로 만드는 과정 필요
-```sh
-python stylegan3/dataset_tool.py \
-    --source ./dataset \
-    --dest ./dataset/dataset.zip
-```
-
-## Model training
-I trained the dataset on the [StyleGAN3](https://github.com/NVlabs/stylegan3.git) model.
-- `train.py` 256 line : `c.augment_kwargs = dnnlib.EasyDict(class_name='training.augment.AugmentPipe', xflip=1, rotate90=0, xint=1, xint_max=0.1, scale=0.5, rotate=0.3, aniso=1, xfrac=0.2, brightness=0.3, contrast=0.2, lumaflip=0, hue=0, saturation=0.2)`
-
-### Unconditional Training
-```sh
-CUDA_VISIBLE_DEVICES=0 python stylegan3/train.py \
-    --gpus=1 \
-    --cfg=stylegan3-r \
-    --data=./dataset/dataset.zip \
-    --outdir=./stylegan3/training-runs \
-    --batch=4 \
-    --mirror=1 \
-    --gamma=8 \
-    --kimg=25000 \
-    --tick=10 \
-    --snap=10 \
-    --aug=ada \
-    --dry-run
-
-# --kimg KIMG : Total training duration  [default: 25000]
-# --tick KIMG : How often to print progress  [default: 4]
-# --snap TICKS : How often to save snapshots  [default: 50]
-```
-
-### Conditional Training
-```sh
-CUDA_VISIBLE_DEVICES=0 python stylegan3/train.py \
-    --gpus=1 \
-    --cfg=stylegan3-r \
-    --data=./dataset/dataset.zip \
-    --cond=1 \
-    --outdir=./stylegan3/training-runs \
-    --batch=4 \
-    --mirror=1 \
-    --gamma=8 \
-    --kimg=25000 \
-    --tick=10 \
-    --snap=10 \
-    --aug=ada \
-    --dry-run
-```
-
-## Projection
-```sh
-CUDA_VISIBLE_DEVICES=1 python 3_projection_fun.py
-
-CUDA_VISIBLE_DEVICES=1 python 3_projection.py
-```
-
-## Inference : `demo.py`
-You can generate a image randomly or by class in [web demo](#web-demo).
+- 수집한 이미지를 1024x1024 해상도로 resize 후 저장
+- 속성(type) 정보를 표로 정리하여 `.csv` 파일으로 저장
 
 
-## Reference
-- [How to check augmentations for the StyleGAN3](https://medium.com/@Dok11/how-to-check-augmentations-for-the-stylegan3-196f8c2ddf07)
+## Projections by StyleGAN-XL
+
+``sh
+git clone https://github.com/autonomousvision/stylegan-xl.git
+``
+
