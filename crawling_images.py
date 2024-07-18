@@ -4,13 +4,15 @@ import time
 import pandas as pd
 from PIL import Image
 import os, requests
+from tqdm import tqdm
 
-url = "https://www.pokemon.com/us/pokedex"
-options = uc.ChromeOptions()
-options.add_argument("--headless=new")
-browser = uc.Chrome(options=options)
-browser.get(url)
+URL = "https://www.pokemon.com/us/pokedex"
+SAVE_DIR = 'dataset'
+
+browser = uc.Chrome()
+browser.get(URL)
 browser.implicitly_wait(10)
+print('Open browser !')
 
 while True :
     try :
@@ -25,10 +27,8 @@ print('Total items :', len(items))
 class_kor = ["노말", "불꽃", "물", "풀", "전기", "얼음", "격투", "독", "땅", "비행", "에스퍼", "벌레", "바위", "고스트", "드래곤", "악", "강철", "페어리"]
 class_en = ["Normal", "Fire", "Water", "Grass", "Electric", "Ice", "Fighting", "Poison", "Ground", "Flying", "Psychic", "Bug", "Rock", "Ghost", "Dragon", "Dark", "Steel", "Fairy"]
 df = pd.DataFrame(columns=['img_path'] + class_en)
-os.makedirs('dataset2/images', exist_ok=True)
-for i, item in enumerate(items) :
-    if i % (len(items) // 10) == 0 : print(f"{i} / {len(items)}")
-
+os.makedirs(f'{SAVE_DIR}/images', exist_ok=True)
+for item in tqdm(items) :
     num = item.find_element(By.CLASS_NAME, 'id').text.replace('#', '')
     abilities = [a.text for a in item.find_elements(By.CLASS_NAME, 'abilities')]
     img_src = item.find_element(By.TAG_NAME, 'img').get_attribute('src')
@@ -46,7 +46,7 @@ for i, item in enumerate(items) :
     bg = Image.new('RGB', img.size, color=(255,255,255))
     bg.paste(img, mask=alpha)
     bg = bg.resize((1024,1024), Image.LANCZOS)
-    bg.save(f'dataset2/images/{num}.png')
+    bg.save(f'{SAVE_DIR}/images/{num}.png')
 
     feature_vector = [0] * len(class_en)
     for ability in abilities :
@@ -56,5 +56,5 @@ for i, item in enumerate(items) :
     item_info = [f"{num}.png"] + feature_vector
     df.loc[len(df)] = item_info
 
-df.to_csv('dataset2/info.csv')
+df.to_csv(f'{SAVE_DIR}/info.csv')
 print(f"CSV saved...! row : {len(df)}")

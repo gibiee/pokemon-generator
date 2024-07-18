@@ -18,8 +18,8 @@
 ```sh
 conda env create -f environment.yml
 
-conda install pandas
-pip install selenium undetected-chromedriver webdriver_manager
+conda install pandas pillow tdqm
+pip install selenium undetected-chromedriver
 # brew install chromedriver
 ```
 
@@ -34,7 +34,6 @@ pip install selenium undetected-chromedriver webdriver_manager
 
 ## Projections by StyleGAN-XL
 
-``sh
+```sh
 git clone https://github.com/autonomousvision/stylegan-xl.git
-``
-
+```
