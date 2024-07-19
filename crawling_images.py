@@ -8,6 +8,7 @@ from tqdm import tqdm
 
 URL = "https://www.pokemon.com/us/pokedex"
 SAVE_DIR = 'dataset'
+SIZE = 1024
 
 browser = uc.Chrome()
 browser.get(URL)
@@ -45,7 +46,7 @@ for item in tqdm(items) :
     alpha = img.split()[-1]
     bg = Image.new('RGB', img.size, color=(255,255,255))
     bg.paste(img, mask=alpha)
-    bg = bg.resize((1024,1024), Image.LANCZOS)
+    bg = bg.resize((SIZE,SIZE), Image.LANCZOS)
     bg.save(f'{SAVE_DIR}/images/{num}.png')
 
     feature_vector = [0] * len(class_en)
