@@ -47,14 +47,14 @@ for item in tqdm(items) :
     bg = Image.new('RGB', img.size, color=(255,255,255))
     bg.paste(img, mask=alpha)
     bg = bg.resize((SIZE,SIZE), Image.LANCZOS)
-    bg.save(f'{SAVE_DIR}/images/{num}.png')
+    bg.save(f'{SAVE_DIR}/images_{SIZE}/{num}.jpg')
 
     feature_vector = [0] * len(class_en)
     for ability in abilities :
         idx = class_en.index(ability)
         feature_vector[idx] = 1
 
-    item_info = [f"{num}.png"] + feature_vector
+    item_info = [f"{num}.jpg"] + feature_vector
     df.loc[len(df)] = item_info
 
 df.to_csv(f'{SAVE_DIR}/info.csv')
