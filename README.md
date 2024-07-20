@@ -1,6 +1,5 @@
 # 현재 개발 진행 중 입니다...
-- inversion 코드에서 G 갱신하지 않은 결과 확인
-- PTI 진행 전의 이미지를 저장하기
+- inversion : G vs 갱신된 G 결과 비교하기
 
 # Index
 - Demo
@@ -35,5 +34,5 @@ pip install selenium undetected-chromedriver
 ## Projections by StyleGAN-XL
 
 ```sh
-git clone https://github.com/autonomousvision/stylegan-xl.git
+CUDA_VISIBLE_DEVICES=1 python run_inversion_custom.py
 ```

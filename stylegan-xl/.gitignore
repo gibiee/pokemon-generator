@@ -22,7 +22,7 @@ tags
 *.pt
 *.npz
 *.tar
-*.gz
+# *.gz
 *.pkl
 *.mp4
 *.pyc

@@ -3,7 +3,7 @@ sys.path.append('./stylegan-xl')
 # from run_inversion import get_morphed_w_code, space_regularizer_loss, pivotal_tuning
 from run_inversion import pivotal_tuning, project
 
-import os, glob
+import os, glob, copy
 import dill, imageio
 import numpy as np
 import PIL.Image
@@ -19,6 +19,7 @@ SEED = 42
 INV_STEPS = 1000
 SAVE_VIDEO = True
 PTI_STEPS = 350 # 350 # if 0 or None : do not pti
+PTI_G = True # New Generator will be saved
 VERBOSE = False
 
 target_paths = sorted(glob.glob('dataset/images_1024/*.jpg'))
@@ -66,12 +67,15 @@ for target_path in tqdm(target_paths[:3]) :
     if PTI_STEPS not in [None, 0] :
         print('Running Pivotal Tuning Inversion...')
         start_time = perf_counter()
+        
+        gen_images, G_ = pivotal_tuning(G, projected_w,
+                                        target=torch.tensor(target_uint8.transpose([2, 0, 1]), device=device),
+                                        device=device,
+                                        num_steps=PTI_STEPS,
+                                        verbose=VERBOSE)
+        if PTI_G :
+            G = copy.deepcopy(G_)
 
-        gen_images, G = pivotal_tuning(G, projected_w,
-                                       target=torch.tensor(target_uint8.transpose([2, 0, 1]), device=device),
-                                       device=device,
-                                       num_steps=PTI_STEPS,
-                                       verbose=VERBOSE)
         all_images += gen_images
         print(f'Elapsed time: {(perf_counter()-start_time):.1f} s')
         result_imgs.append(PIL.Image.fromarray(all_images[-1], 'RGB'))
@@ -90,6 +94,7 @@ for target_path in tqdm(target_paths[:3]) :
     np.savez(f'{SAVE_DIR}/{target_num}_projected_w.npz', w=projected_w.unsqueeze(0).cpu().numpy())
 
 # Save Generator weights
-snapshot_data = {'G': G, 'G_ema': G}
-with open(f"{SAVE_DIR}/G.pkl", 'wb') as f:
-    dill.dump(snapshot_data, f)
+if PTI_G :
+    snapshot_data = {'G': G, 'G_ema': G}
+    with open(f"{SAVE_DIR}/G_PTI.pkl", 'wb') as f:
+        dill.dump(snapshot_data, f)
