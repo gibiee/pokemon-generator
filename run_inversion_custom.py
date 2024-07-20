@@ -1,6 +1,5 @@
 import sys
 sys.path.append('./stylegan-xl')
-# from run_inversion import get_morphed_w_code, space_regularizer_loss, pivotal_tuning
 from run_inversion import pivotal_tuning, project
 
 import os, glob, copy
@@ -12,15 +11,17 @@ import dnnlib, legacy
 from time import perf_counter
 from tqdm import tqdm
 
-# NETWORK = "https://s3.eu-central-1.amazonaws.com/avg-projects/stylegan_xl/models/pokemon512.pkl"
 NETWORK = "https://s3.eu-central-1.amazonaws.com/avg-projects/stylegan_xl/models/pokemon1024.pkl"
-SAVE_DIR = 'projection_2_G'
+SAVE_DIR = 'projection_ptig'
 SEED = 42
 INV_STEPS = 1000
-SAVE_VIDEO = True
+SAVE_VIDEO = False
 PTI_STEPS = 350 # 350 # if 0 or None : do not pti
 PTI_G = True # New Generator will be saved
 VERBOSE = False
+
+SAVE_DIR = 'projection'
+PTI_G = False
 
 target_paths = sorted(glob.glob('dataset/images_1024/*.jpg'))
 print(f'target_paths : {len(target_paths)}')
@@ -37,7 +38,7 @@ device = torch.device('cuda')
 with dnnlib.util.open_url(NETWORK) as fp:
     G = legacy.load_network_pkl(fp)['G_ema'].to(device) # type: ignore
 
-for target_path in tqdm(target_paths[:3]) :
+for target_path in tqdm(target_paths) :
     target_num, _ = os.path.splitext(os.path.basename(target_path))
     result_imgs = []
 
@@ -67,7 +68,6 @@ for target_path in tqdm(target_paths[:3]) :
     if PTI_STEPS not in [None, 0] :
         print('Running Pivotal Tuning Inversion...')
         start_time = perf_counter()
-        
         gen_images, G_ = pivotal_tuning(G, projected_w,
                                         target=torch.tensor(target_uint8.transpose([2, 0, 1]), device=device),
                                         device=device,
