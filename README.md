@@ -1,6 +1,6 @@
 # 현재 개발 진행 중 입니다...
-- 더 많은 VRAM에서 1024 테스트
-- 
+- inversion 코드에서 G 갱신하지 않은 결과 확인
+- PTI 진행 전의 이미지를 저장하기
 
 # Index
 - Demo
@@ -12,13 +12,11 @@
 
 # Demo
 
-
-
 # Development
 
 ## Environment setup
 ```sh
-conda env create -f environment.yml
+conda env create -f stylegan-xl/environment.yml
 
 conda install pandas pillow tdqm
 pip install selenium undetected-chromedriver
