@@ -12,16 +12,13 @@ from time import perf_counter
 from tqdm import tqdm
 
 NETWORK = "https://s3.eu-central-1.amazonaws.com/avg-projects/stylegan_xl/models/pokemon1024.pkl"
-SAVE_DIR = 'projection_ptig'
+SAVE_DIR = 'projection'
 SEED = 42
 INV_STEPS = 1000
 SAVE_VIDEO = False
 PTI_STEPS = 350 # 350 # if 0 or None : do not pti
-PTI_G = True # New Generator will be saved
+PTI_G = False # New Generator will be saved
 VERBOSE = False
-
-SAVE_DIR = 'projection'
-PTI_G = False
 
 target_paths = sorted(glob.glob('dataset/images_1024/*.jpg'))
 print(f'target_paths : {len(target_paths)}')
