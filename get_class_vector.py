@@ -25,6 +25,7 @@ average_vectors = {}
 for class_name, (vector_sum, count) in data.items() :
     average_vectors[class_name] = vector_sum / count
 
-os.makedirs('./average_vectors', exist_ok=True)
+SAVE_DIR = 'class_vector'
+os.makedirs(f'./{SAVE_DIR}', exist_ok=True)
 for class_name, avg_vector in average_vectors.items() :
-    np.save(f'average_vectors/{class_name}.npy', avg_vector)
+    np.save(f'./{SAVE_DIR}/{class_name}.npy', avg_vector)

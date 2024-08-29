@@ -35,6 +35,7 @@ device = torch.device('cuda')
 with dnnlib.util.open_url(NETWORK) as fp:
     G = legacy.load_network_pkl(fp)['G_ema'].to(device) # type: ignore
 
+# target_path = target_paths[0]
 for target_path in tqdm(target_paths) :
     target_num, _ = os.path.splitext(os.path.basename(target_path))
     result_imgs = []
