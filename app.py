@@ -66,10 +66,10 @@ def add_image_to_gallery(gallery, img) :
 
 with gr.Blocks() as demo :
     gr.Markdown('# Pokémon Generator')
-    gr.Markdown('Generate the base Pokémon. Then, apply class features to edit the base Pokémon.')
+    gr.Markdown('Generate a base Pokémon. Then, apply class features to edit the base Pokémon.')
     with gr.Row() :
         with gr.Column() :
-            btn_generate = gr.Button('Generate a Pokémon', variant='primary')
+            btn_generate = gr.Button('Generate a base Pokémon', variant='primary')
             base_state = gr.State()
 
             with gr.Row() :
