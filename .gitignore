@@ -1,6 +1,7 @@
 dataset/images_512/
 dataset/images_1024/
-projection*/
+projection/
+projection_ptig/
 
 # Created by https://www.toptal.com/developers/gitignore/api/python,macos
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,macos
