@@ -37,13 +37,13 @@ def apply_class_feature(base_state, base_ratio, normal, fire, water, grass, elec
     
     class_values = [normal, fire, water, grass, electric, ice, fighting, poison, ground, flying, psychic, bug, rock, ghost, dragon, dark, steel, fairy]
     if sum(class_values) == 0 :
-        # output = gen_utils.w_to_img(G, base_state, to_np=True)[0]
-        # return Image.fromarray(output, 'RGB')
         return base_state[-1]
     
-    class_values = np.array(class_values)
+    # class_values = np.array(class_values)
     target_feature = None
     for i, class_value in enumerate(class_values) :
+        if class_value == 0 : continue
+
         class_name = CLASS_NAMES[i]
         class_feature = CLASS_FEATURES[class_name]
 
@@ -73,27 +73,27 @@ with gr.Blocks() as demo :
             base_state = gr.State()
 
             with gr.Row() :
-                normal = gr.Slider(label='Normal', minimum=0, maximum=1, value=0, step=0.01)
-                fire = gr.Slider(label='Fire', minimum=0, maximum=1, value=0, step=0.01)
-                water = gr.Slider(label='Water', minimum=0, maximum=1, value=0, step=0.01)
-                grass = gr.Slider(label='Grass', minimum=0, maximum=1, value=0, step=0.01)
-                electric = gr.Slider(label='Electric', minimum=0, maximum=1, value=0, step=0.01)
-                ice = gr.Slider(label='Ice', minimum=0, maximum=1, value=0, step=0.01)
-                fighting = gr.Slider(label='Fighting', minimum=0, maximum=1, value=0, step=0.01)
-                poison = gr.Slider(label='Poison', minimum=0, maximum=1, value=0, step=0.01)
-                ground = gr.Slider(label='Ground', minimum=0, maximum=1, value=0, step=0.01)
-                flying = gr.Slider(label='Flying', minimum=0, maximum=1, value=0, step=0.01)
-                psychic = gr.Slider(label='Psychic', minimum=0, maximum=1, value=0, step=0.01)
-                bug = gr.Slider(label='Bug', minimum=0, maximum=1, value=0, step=0.01)
-                rock = gr.Slider(label='Rock', minimum=0, maximum=1, value=0, step=0.01)
-                ghost = gr.Slider(label='Ghost', minimum=0, maximum=1, value=0, step=0.01)
-                dragon = gr.Slider(label='Dragon', minimum=0, maximum=1, value=0, step=0.01)
-                dark = gr.Slider(label='Dark', minimum=0, maximum=1, value=0, step=0.01)
-                steel = gr.Slider(label='Steel', minimum=0, maximum=1, value=0, step=0.01)
-                fairy = gr.Slider(label='Fairy', minimum=0, maximum=1, value=0, step=0.01)
+                normal = gr.Slider(label='Normal', minimum=-1, maximum=1, value=0, step=0.01)
+                fire = gr.Slider(label='Fire', minimum=-1, maximum=1, value=0, step=0.01)
+                water = gr.Slider(label='Water', minimum=-1, maximum=1, value=0, step=0.01)
+                grass = gr.Slider(label='Grass', minimum=-1, maximum=1, value=0, step=0.01)
+                electric = gr.Slider(label='Electric', minimum=-1, maximum=1, value=0, step=0.01)
+                ice = gr.Slider(label='Ice', minimum=-1, maximum=1, value=0, step=0.01)
+                fighting = gr.Slider(label='Fighting', minimum=-1, maximum=1, value=0, step=0.01)
+                poison = gr.Slider(label='Poison', minimum=-1, maximum=1, value=0, step=0.01)
+                ground = gr.Slider(label='Ground', minimum=-1, maximum=1, value=0, step=0.01)
+                flying = gr.Slider(label='Flying', minimum=-1, maximum=1, value=0, step=0.01)
+                psychic = gr.Slider(label='Psychic', minimum=-1, maximum=1, value=0, step=0.01)
+                bug = gr.Slider(label='Bug', minimum=-1, maximum=1, value=0, step=0.01)
+                rock = gr.Slider(label='Rock', minimum=-1, maximum=1, value=0, step=0.01)
+                ghost = gr.Slider(label='Ghost', minimum=-1, maximum=1, value=0, step=0.01)
+                dragon = gr.Slider(label='Dragon', minimum=-1, maximum=1, value=0, step=0.01)
+                dark = gr.Slider(label='Dark', minimum=-1, maximum=1, value=0, step=0.01)
+                steel = gr.Slider(label='Steel', minimum=-1, maximum=1, value=0, step=0.01)
+                fairy = gr.Slider(label='Fairy', minimum=-1, maximum=1, value=0, step=0.01)
 
             with gr.Row() :
-                btn_zero = gr.Button('Reset', variant='secondary')
+                btn_zero = gr.Button('Reset to 0', variant='secondary')
                 btn_random = gr.Button('Randomize', variant='secondary')
                 btn_edit = gr.Button('Apply class feature', variant='primary')
             
