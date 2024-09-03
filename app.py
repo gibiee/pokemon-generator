@@ -20,9 +20,6 @@ with dnnlib.util.open_url(NETWORK) as f:
 
 def reset_values(*args) :
     return [0 for _ in range(len(args))]
-            
-def randomize_values(*args) :
-    return [round(random.random(), 2) for _ in range(len(args))]
 
 def generate_base_pokemon() :
     random_seed = random.randint(0, 2**32 - 1)
@@ -39,7 +36,6 @@ def apply_class_feature(base_state, base_ratio, normal, fire, water, grass, elec
     if sum(class_values) == 0 :
         return base_state[-1]
     
-    # class_values = np.array(class_values)
     target_feature = None
     for i, class_value in enumerate(class_values) :
         if class_value == 0 : continue
@@ -106,12 +102,6 @@ with gr.Blocks() as demo :
 
     btn_zero.click(
         fn=reset_values,
-        inputs=[normal, fire, water, grass, electric, ice, fighting, poison, ground, flying, psychic, bug, rock, ghost, dragon, dark, steel, fairy],
-        outputs=[normal, fire, water, grass, electric, ice, fighting, poison, ground, flying, psychic, bug, rock, ghost, dragon, dark, steel, fairy]
-    )
-
-    btn_random.click(
-        fn=randomize_values,
         inputs=[normal, fire, water, grass, electric, ice, fighting, poison, ground, flying, psychic, bug, rock, ghost, dragon, dark, steel, fairy],
         outputs=[normal, fire, water, grass, electric, ice, fighting, poison, ground, flying, psychic, bug, rock, ghost, dragon, dark, steel, fairy]
     )
