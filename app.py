@@ -12,7 +12,7 @@ from torch_utils import gen_utils
 NETWORK = "https://s3.eu-central-1.amazonaws.com/avg-projects/stylegan_xl/models/pokemon1024.pkl"
 CLASS_NAMES = ["Normal", "Fire", "Water", "Grass", "Electric", "Ice", "Fighting", "Poison", "Ground", "Flying", "Psychic", "Bug", "Rock", "Ghost", "Dragon", "Dark", "Steel", "Fairy"]
 CLASS_FEATURES = {cname: np.load(f'class_vectors/{cname}.npy') for cname in CLASS_NAMES}
-device = torch.device('cuda')
+device = "cuda" if torch.cuda.is_available() else "cpu"
 
 with dnnlib.util.open_url(NETWORK) as f:
     G = legacy.load_network_pkl(f)['G_ema']
