@@ -11,7 +11,7 @@ from torch_utils import gen_utils
 
 NETWORK = "https://s3.eu-central-1.amazonaws.com/avg-projects/stylegan_xl/models/pokemon1024.pkl"
 CLASS_NAMES = ["Normal", "Fire", "Water", "Grass", "Electric", "Ice", "Fighting", "Poison", "Ground", "Flying", "Psychic", "Bug", "Rock", "Ghost", "Dragon", "Dark", "Steel", "Fairy"]
-CLASS_FEATURES = {cname: np.load(f'class_features/{cname}.npy') for cname in CLASS_NAMES}
+CLASS_FEATURES = {cname: np.load(f'class_vectors/{cname}.npy') for cname in CLASS_NAMES}
 device = torch.device('cuda')
 
 with dnnlib.util.open_url(NETWORK) as f:
@@ -90,7 +90,6 @@ with gr.Blocks() as demo :
 
             with gr.Row() :
                 btn_zero = gr.Button('Reset to 0', variant='secondary')
-                btn_random = gr.Button('Randomize', variant='secondary')
                 btn_edit = gr.Button('Apply class feature', variant='primary')
             
             base_ratio = gr.Slider(label='Base ratio', minimum=0, maximum=1, value=0.5, step=0.01,
