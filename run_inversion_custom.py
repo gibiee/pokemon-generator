@@ -1,23 +1,23 @@
-import sys
-sys.path.append('./stylegan-xl')
-from run_inversion import pivotal_tuning, project
-
 import os, glob, copy
 import dill, imageio
 import numpy as np
 import PIL.Image
 import torch
-import dnnlib, legacy
 from time import perf_counter
 from tqdm import tqdm
 
+import sys
+sys.path.append('./stylegan-xl')
+from run_inversion import pivotal_tuning, project
+import dnnlib, legacy
+
 NETWORK = "https://s3.eu-central-1.amazonaws.com/avg-projects/stylegan_xl/models/pokemon1024.pkl"
-SAVE_DIR = 'projection'
+SAVE_DIR = 'projections/default'
 SEED = 42
 INV_STEPS = 1000
 SAVE_VIDEO = False
-PTI_STEPS = 350 # 350 # if 0 or None : do not pti
-PTI_G = False # New Generator will be saved
+PTI_STEPS = 350 # Default 350. If 0 or None, PTI will be not applied.
+PTI_G = False # PTI Generator will be updated for each sample and saved as .pkl file.
 VERBOSE = False
 
 target_paths = sorted(glob.glob('dataset/images_1024/*.jpg'))
@@ -86,7 +86,7 @@ for target_path in tqdm(target_paths) :
             video.append_data(np.concatenate([target_uint8, synth_image], axis=1))
         video.close()
 
-    PIL.Image.fromarray(np.concatenate(result_imgs, axis=1), 'RGB').save(f'{SAVE_DIR}/{target_num}_results.png')
+    PIL.Image.fromarray(np.concatenate(result_imgs, axis=1), 'RGB').save(f'{SAVE_DIR}/{target_num}_results.jpg')
 
     # save latents
     np.savez(f'{SAVE_DIR}/{target_num}_projected_w.npz', w=projected_w.unsqueeze(0).cpu().numpy())
