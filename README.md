@@ -1,14 +1,23 @@
 <div align="center">
-<h1>Pokémon Generator</h1>
-<a href='https://huggingface.co/spaces/InstantX/InstantID'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue'></a>
+  <h1>Pokémon Generator</h1>
+  <a href='https://huggingface.co/spaces/gibiee/Pokemon-Generator'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue'/></a>
+</div>
+You can generate a base Pokémon image randomly, then edit the class information.
+
+### Random Generation
+<div align="center">
+  <img src='./examples/ex1.jpg' width=80% />
+</div>
+
+### Edit by Class
+<div style="display: flex; align-items: center; justify-content: center">
+  <img src='./examples/ex2.jpg' width=40% /><span>&nbsp;&nbsp;&nbsp;</span><img src='./examples/ex3.jpg' width=40% />
 </div>
 
 
-
+## More Information
 <details>
-<summary>More Information</summary>
-
-# Development
+<summary>Development</summary>
 
 ## Installation
 
@@ -34,14 +43,4 @@ pip install selenium undetected-chromedriver
 - StyleGAN-XL 기반의 inversion 진행
 - PTI 옵션을 적용하지 않을 때, 범용성이 더 높음.
 
-## Inference
-
-### Generate a Pokémon image
-- base 포켓몬 이미지를 먼저 생성한 후, 이를 기반으로 class 정보(feature)를 조금씩 수정하면서 편집
-
-# To-Do List
-- huggingspace 코드 상에서 zeroGPU 적용
-- 데모 스크린샷 첨부
-- 데모 사용법 작성
-- 예시 이미지 선별 후 첨부
 </details>
