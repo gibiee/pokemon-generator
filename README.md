@@ -2,16 +2,17 @@
   <h1>Pokémon Generator</h1>
   <a href='https://huggingface.co/spaces/gibiee/Pokemon-Generator'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue'/></a>
 </div>
+
 You can generate a base Pokémon image randomly, then edit the class information.
 
 ### Random Generation
 <div align="center">
-  <img src='./examples/ex1.jpg' width=80% />
+  <img src='./examples/ex1.jpg'/>
 </div>
 
 ### Edit by Class
-<div style="display: flex; align-items: center; justify-content: center">
-  <img src='./examples/ex2.jpg' width=40% /><span>&nbsp;&nbsp;&nbsp;</span><img src='./examples/ex3.jpg' width=40% />
+<div align="center">
+  <img src='./examples/ex2.jpg' width=45% /><span>&nbsp;&nbsp;&nbsp;</span><img src='./examples/ex3.jpg' width=45% />
 </div>
 
 
